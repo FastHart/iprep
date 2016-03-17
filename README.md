@@ -26,7 +26,7 @@ For example IP 198.21.7.133 has reputation 100, and IP's 98.101.243.50 reputatio
 
 This system is running in production on my server.  
 You can check system status here: [Iprep Status Page](http://valynkin.ru/iprep)  
-If you wish to use my running instance of the iprep as dnsbl, or if you would like to connect to the project to feed data, please write me to <this project name>@valynkin.ru.
+If you wish to use my running instance of the iprep as dnsbl, or if you would like to connect to the project to feed data, please write me to `<this project name>@valynkin.ru`.
 
 
 ### General architecture
