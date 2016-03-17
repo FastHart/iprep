@@ -1,0 +1,4 @@
+zone "iprep.propertyminder.colo" {
+	type master;
+	file "/etc/bind/iprep/iprep.propertyminder.colo";
+};

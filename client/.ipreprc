@@ -1,0 +1,6 @@
+$trusted_networks = '172.17.0.17/16 192.168.77.0/24';
+$user = 'user';
+$pass = 'password';
+$workdir = '/tmp/iprep';
+$server = '172.17.100.18';
+$debug = '0';

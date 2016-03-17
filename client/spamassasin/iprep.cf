@@ -1,0 +1,78 @@
+#
+#http://www.chaosreigns.com/iprep/
+#
+ifplugin Mail::SpamAssassin::Plugin::DNSEval
+header   __RCVD_IN_IPREPDNS     eval:check_rbl('iprep-firsttrusted', 'iprep.propertyminder.colo.')
+tflags   __RCVD_IN_IPREPDNS     nice net
+
+header   __RCVD_IN_IPREPDNS_100   eval:check_rbl_sub('iprep-firsttrusted', '^127\.\d+\.\d+\.100$')
+describe __RCVD_IN_IPREPDNS_100   Sender listed at http://iprep.propertyminder.colo/iprep/, 100% ham
+tflags   __RCVD_IN_IPREPDNS_100   nice net
+
+header   __RCVD_IN_IPREPDNS_90   eval:check_rbl_sub('iprep-firsttrusted', '^127\.\d+\.\d+\.9\d$')
+describe __RCVD_IN_IPREPDNS_90   Sender listed at http://iprep.propertyminder.colo/iprep/, 90% ham
+tflags   __RCVD_IN_IPREPDNS_90   nice net
+
+header   __RCVD_IN_IPREPDNS_80   eval:check_rbl_sub('iprep-firsttrusted', '^127\.\d+\.\d+\.8\d$')
+describe __RCVD_IN_IPREPDNS_80   Sender listed at http://iprep.propertyminder.colo/iprep/, 80% ham
+tflags   __RCVD_IN_IPREPDNS_80   nice net
+
+header   __RCVD_IN_IPREPDNS_70   eval:check_rbl_sub('iprep-firsttrusted', '^127\.\d+\.\d+\.7\d$')
+describe __RCVD_IN_IPREPDNS_70   Sender listed at http://iprep.propertyminder.colo/iprep/, 70% ham
+tflags   __RCVD_IN_IPREPDNS_70   nice net
+
+header   __RCVD_IN_IPREPDNS_60   eval:check_rbl_sub('iprep-firsttrusted', '^127\.\d+\.\d+\.6\d$')
+describe __RCVD_IN_IPREPDNS_60   Sender listed at http://iprep.propertyminder.colo/iprep/, 60% ham
+tflags   __RCVD_IN_IPREPDNS_60   nice net
+
+header   __RCVD_IN_IPREPDNS_50   eval:check_rbl_sub('iprep-firsttrusted', '^127\.\d+\.\d+\.5\d$')
+describe __RCVD_IN_IPREPDNS_50   Sender listed at http://iprep.propertyminder.colo/iprep/, 50% ham
+tflags   __RCVD_IN_IPREPDNS_50   nice net
+
+header   __RCVD_IN_IPREPDNS_40   eval:check_rbl_sub('iprep-firsttrusted', '^127\.\d+\.\d+\.4\d$')
+describe __RCVD_IN_IPREPDNS_40   Sender listed at http://iprep.propertyminder.colo/iprep/, 40% ham
+tflags   __RCVD_IN_IPREPDNS_40   nice net
+
+header   __RCVD_IN_IPREPDNS_30   eval:check_rbl_sub('iprep-firsttrusted', '^127\.\d+\.\d+\.3\d$')
+describe __RCVD_IN_IPREPDNS_30   Sender listed at http://iprep.propertyminder.colo/iprep/, 30% ham
+tflags   __RCVD_IN_IPREPDNS_30   nice net
+
+header   __RCVD_IN_IPREPDNS_20    eval:check_rbl_sub('iprep-firsttrusted', '^127\.\d+\.\d+\.2\d$')
+describe __RCVD_IN_IPREPDNS_20    Sender listed at http://iprep.propertyminder.colo/iprep/, 20% ham
+tflags   __RCVD_IN_IPREPDNS_20    nice net
+
+header   __RCVD_IN_IPREPDNS_10    eval:check_rbl_sub('iprep-firsttrusted', '^127\.\d+\.\d+\.1\d$')
+describe __RCVD_IN_IPREPDNS_10    Sender listed at http://iprep.propertyminder.colo/iprep/, 10% ham
+tflags   __RCVD_IN_IPREPDNS_10    nice net
+
+header   __RCVD_IN_IPREPDNS_0     eval:check_rbl_sub('iprep-firsttrusted', '^127\.\d+\.\d+\.\d$')
+describe __RCVD_IN_IPREPDNS_0     Sender listed at http://iprep.propertyminder.colo/iprep/, 0% ham
+tflags   __RCVD_IN_IPREPDNS_0     net
+
+
+meta     RCVD_IN_IPREPDNS_80_100  ( __RCVD_IN_IPREPDNS_100 || __RCVD_IN_IPREPDNS_90 || RCVD_IN_IPREPDNS_80 )
+describe RCVD_IN_IPREPDNS_80_100 Sender listed at http://iprep.propertyminder.colo/iprep/ 80%-100% probability of ham
+tflags   RCVD_IN_IPREPDNS_80_100 net
+
+meta     RCVD_IN_IPREPDNS_50_79  ( __RCVD_IN_IPREPDNS_70 || __RCVD_IN_IPREPDNS_60 || RCVD_IN_IPREPDNS_50 )
+describe RCVD_IN_IPREPDNS_50_79 Sender listed at http://iprep.propertyminder.colo/iprep/ 50%-70% probability of ham
+tflags   RCVD_IN_IPREPDNS_50_79 net
+
+meta     RCVD_IN_IPREPDNS_20_49  ( __RCVD_IN_IPREPDNS_40 || __RCVD_IN_IPREPDNS_30 || RCVD_IN_IPREPDNS_20 )
+describe RCVD_IN_IPREPDNS_20_49 Sender listed at http://iprep.propertyminder.colo/iprep/ 20%-40% probability of ham
+tflags   RCVD_IN_IPREPDNS_20_49 net
+
+meta     RCVD_IN_IPREPDNS_0_19  ( __RCVD_IN_IPREPDNS_10 || __RCVD_IN_IPREPDNS_0 )
+describe RCVD_IN_IPREPDNS_0_19 Sender listed at http://iprep.propertyminder.colo/iprep/ 0%-10% probability of ham
+tflags   RCVD_IN_IPREPDNS_0_19 net
+
+meta     RCVD_NOT_IN_IPREPDNS   ( ! RCVD_IN_IPREPDNS_80_100 && ! RCVD_IN_IPREPDNS_70_50 && ! RCVD_IN_IPREPDNS_40_20 && ! RCVD_IN_IPREPDNS_10_0 && ! NO_RELAYS && ! ALL_TRUSTED )
+describe RCVD_NOT_IN_IPREPDNS   Sender not listed at http://iprep.propertyminder.colo/iprep/
+tflags   RCVD_NOT_IN_IPREPDNS   net
+
+score    RCVD_IN_IPREPDNS_80_100   -2
+score    RCVD_IN_IPREPDNS_50_79    -1
+score    RCVD_IN_IPREPDNS_20_49    -0.01
+score    RCVD_IN_IPREPDNS_0_19     1
+score    RCVD_NOT_IN_IPREPDNS   0.0001
+endif

@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+# This script runs by cron every 10 minutes and sends iprep statistics to zabbix
+# cron command is:
+# /etc/zabbix/scripts/zabbix-iprep  | zabbix_sender -c /etc/zabbix/zabbix_agentd.conf --input-file - 2>&1 >/dev/null
+#
+WGET_BIN="/usr/bin/wget"
+URL="http://localhost/cgi-bin/iprep_status.cgi"
+HOSTNAME="-"
+
+STATS=$($WGET_BIN -q $URL -O - 2> /dev/null)
+
+echo -n "$HOSTNAME database-last-updated "
+echo "$STATS" | grep "Database last updated:"  | /usr/bin/awk '{print $4"_"$5}'
+
+echo -n "$HOSTNAME rows-in-raw-table "
+echo "$STATS" | grep "Total rows in rawdata table:"  | /usr/bin/cut -f6 -d' '
+
+echo -n "$HOSTNAME total-scored-ips "
+echo "$STATS" | grep "Total scored IP's:"  | /usr/bin/cut -f4 -d' '
+
+echo -n "$HOSTNAME total-ham-ips "
+echo "$STATS" | grep "Total ip's with score above 80 (WHITE):"  | /usr/bin/cut -f8 -d' '
+
+echo -n "$HOSTNAME total-spam-ips "
+echo "$STATS" | grep "Total ip's with score little than 20 (BLACK):"  | /usr/bin/cut -f9 -d' '
+
+echo -n "$HOSTNAME total-in-between-ips "
+echo "$STATS" | grep "Total ip's with scores in between:"  | /usr/bin/cut -f2 -d':'

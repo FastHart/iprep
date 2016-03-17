@@ -1,0 +1,2 @@
+# send iprep statistics every 10 min
+*/10 *   * * *   root /etc/zabbix/scripts/zabbix-iprep  | zabbix_sender -c /etc/zabbix/zabbix_agentd.conf --input-file - 2>&1 >/dev/null

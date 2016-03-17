@@ -1,0 +1,17 @@
+To install client do following:
+
+1) Edit spamassasin config, add folowing lines:
+    $QUARANTINEDIR = "$MYHOME/quarantine";
+    $clean_quarantine_method = 'local:clean/%m';
+2) Create quarantine dirs 
+    In my case:
+    mkdir /opt/zimbra/data/amavisd/quarantine
+    mkdir /opt/zimbra/data/amavisd/quarantine/clean
+    mkdir /opt/zimbra/data/amavisd/quarantine/clean/ham
+    mkdir /opt/zimbra/data/amavisd/quarantine/clean/spam
+3) Put start_iprep.sh, iprep.pl and prepare_quarantined_data.pl to /usr/local/bin/iprep/
+4) Edit .ipreprc and put to home directory of the spamassasin user
+5) Put iprep.cron to /etc/cron.d
+6) Put iprep.cf to spamassasin local-configs dir (in my case /opt/zimbra/conf/sa)
+
+7) Restart spamassasin.
