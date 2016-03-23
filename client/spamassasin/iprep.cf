@@ -66,7 +66,7 @@ meta     RCVD_IN_IPREPDNS_0_19  ( __RCVD_IN_IPREPDNS_10 || __RCVD_IN_IPREPDNS_0 
 describe RCVD_IN_IPREPDNS_0_19 Sender listed at http://valynkin.ru/iprep/ 0%-10% probability of ham
 tflags   RCVD_IN_IPREPDNS_0_19 net
 
-meta     RCVD_NOT_IN_IPREPDNS   ( ! RCVD_IN_IPREPDNS_80_100 && ! RCVD_IN_IPREPDNS_70_50 && ! RCVD_IN_IPREPDNS_40_20 && ! RCVD_IN_IPREPDNS_10_0 && ! NO_RELAYS && ! ALL_TRUSTED )
+meta     RCVD_NOT_IN_IPREPDNS   ( ! RCVD_IN_IPREPDNS_80_100 && ! RCVD_IN_IPREPDNS_50_79 && ! RCVD_IN_IPREPDNS_20_49 && ! RCVD_IN_IPREPDNS_0_19 && ! NO_RELAYS && ! ALL_TRUSTED )
 describe RCVD_NOT_IN_IPREPDNS   Sender not listed at http://valynkin.ru/iprep/
 tflags   RCVD_NOT_IN_IPREPDNS   net
 
