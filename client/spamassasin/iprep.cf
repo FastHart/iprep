@@ -50,15 +50,15 @@ describe __RCVD_IN_IPREPDNS_0     Sender listed at http://valynkin.ru/iprep/, 0%
 tflags   __RCVD_IN_IPREPDNS_0     net
 
 
-meta     RCVD_IN_IPREPDNS_80_100  ( __RCVD_IN_IPREPDNS_100 || __RCVD_IN_IPREPDNS_90 || RCVD_IN_IPREPDNS_80 )
+meta     RCVD_IN_IPREPDNS_80_100  ( __RCVD_IN_IPREPDNS_100 || __RCVD_IN_IPREPDNS_90 || __RCVD_IN_IPREPDNS_80 )
 describe RCVD_IN_IPREPDNS_80_100 Sender listed at http://valynkin.ru/iprep/ 80%-100% probability of ham
 tflags   RCVD_IN_IPREPDNS_80_100 net
 
-meta     RCVD_IN_IPREPDNS_50_79  ( __RCVD_IN_IPREPDNS_70 || __RCVD_IN_IPREPDNS_60 || RCVD_IN_IPREPDNS_50 )
+meta     RCVD_IN_IPREPDNS_50_79  ( __RCVD_IN_IPREPDNS_70 || __RCVD_IN_IPREPDNS_60 || __RCVD_IN_IPREPDNS_50 )
 describe RCVD_IN_IPREPDNS_50_79 Sender listed at http://valynkin.ru/iprep/ 50%-70% probability of ham
 tflags   RCVD_IN_IPREPDNS_50_79 net
 
-meta     RCVD_IN_IPREPDNS_20_49  ( __RCVD_IN_IPREPDNS_40 || __RCVD_IN_IPREPDNS_30 || RCVD_IN_IPREPDNS_20 )
+meta     RCVD_IN_IPREPDNS_20_49  ( __RCVD_IN_IPREPDNS_40 || __RCVD_IN_IPREPDNS_30 || __RCVD_IN_IPREPDNS_20 )
 describe RCVD_IN_IPREPDNS_20_49 Sender listed at http://valynkin.ru/iprep/ 20%-40% probability of ham
 tflags   RCVD_IN_IPREPDNS_20_49 net
 
