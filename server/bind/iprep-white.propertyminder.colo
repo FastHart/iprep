@@ -1,0 +1,6 @@
+$TTL    60
+@       43200   SOA     iprep-white.propertyminder.colo.      admins.propertyminder.com.      (1458194041 3600 300 432000 600)
+        IN      NS      iprep-white.propertyminder.colo.
+        A       172.17.100.18
+
+1.0.0.127	A	127.0.0.100
