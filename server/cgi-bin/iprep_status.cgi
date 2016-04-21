@@ -5,7 +5,7 @@ echo ""
 
 MYSQL='/usr/bin/mysql -N -u root iprep'
 
-printf "Database last updated: "
+printf "Database last updated (`/bin/date +"%Z %:::z"`): "
 echo "select max(timestamp) from iprep;" | $MYSQL
 
 printf "Total rows in rawdata table: "

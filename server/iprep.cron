@@ -1,1 +1,0 @@
-*/1 *   * * *   root /usr/local/iprep/bin/iprep.pl; /usr/bin/pkill -HUP named

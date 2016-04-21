@@ -2,3 +2,13 @@ zone "iprep.propertyminder.colo" {
 	type master;
 	file "/etc/bind/iprep/iprep.propertyminder.colo";
 };
+
+zone "iprep-black.propertyminder.colo" {
+    type master;
+    file "/etc/bind/iprep/iprep-black.propertyminder.colo";
+};
+
+zone "iprep-white.propertyminder.colo" {
+    type master;
+    file "/etc/bind/iprep/iprep-white.propertyminder.colo";
+};

@@ -1,0 +1,5 @@
+# run main iprep scripts every minute
+*/1 *   * * *   root /usr/local/iprep/bin/iprep_load_data.pl >/dev/null 2>&1; /usr/local/iprep/bin/iprep_create_dns_zones.pl  >/dev/null 2>&1
+
+# run iprep_learn_from_imap.pl once a hour
+55 */1  * * * root /usr/local/iprep/bin/iprep_learn_from_imap.pl >/dev/null 2>&1

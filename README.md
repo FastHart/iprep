@@ -1,4 +1,4 @@
-# iprep
+# IpRep
 
 This is an IpReputation project. Is inspired by [http://www.chaosreigns.com/iprep/](http://www.chaosreigns.com/iprep/).  
 Unfortunately iprep project by chaosreigns seems dead (at least I don't get any feedback from project founder), so I started my own project for my purposes.
@@ -24,7 +24,10 @@ For example IP 198.21.7.133 has reputation 100, and IP's 98.101.243.50 reputatio
     $ host 50.243.101.98.iprep.propertyminder.com
     50.243.101.98.iprep.propertyminder.colo has address 127.0.0.0
 
-This system is running in production on my server.  
+In addition to the main iprep reputation zone (iprep) system provides other two dnsbl zones  (`iprep-black` and `iprep-white`), which contains IP adresses with very poor or very good reputation respectively.  
+This two zones can be used by `greylisting`, `postscreen` or by other anti-spam mechanisms.
+
+Now IpRep is running in production on my server.  
 You can check system status here: [Iprep Status Page](http://valynkin.ru/iprep)  
 If you wish to use my running instance of the iprep as dnsbl, or if you would like to connect to the project to feed data, please write me to `<this project name>@valynkin.ru`.
 
@@ -37,16 +40,72 @@ Scripts are written in perl. Used perl modules:
     Mail::SpamAssassin::Message::Metadata::Received qw(parse_received_line);
     Date::Parse; # str2time
     Mail::SpamAssassin::ArchiveIterator;
+    Sys::Syslog;
+    Net::IMAP::Simple;
+    MIME::Parser;
     DBI;
 
-System contains two parts:
+System contains globally of two parts:
 
-1. Client - running on spamassassin server, reads quarantined messages and provides IP to server
-2. Server - running on mysql and bind server, gets data from client, puts data to mysql and updates dns-zone file.
+1. Server - running mysql and bind server, gets data from clients, calculate reputation (stores data in to mysql)  and provides reputation data to clients thru dnsbl mechanism.
+2. Client/Data-feeder - running spamassassin, and provides spam/ham IP to server. 
 
 See my [IPReputation system Scheme](https://docs.google.com/drawings/d/1Ly_778Fp9qDHfNt3xne4H1RC0voBg83umfspOTV0uew/edit?usp=sharing) drawings on Google Docs
 
-I use the iprep.pl written by chaosreigns as a "Client".
+In details system consists of the following scripts:
+
+Server side:
+
+- `iprep_create_dns_zones.pl`: This script creates dns-zone files in DNSBL format for use with bind.
+- `iprep_load_data.pl`: This script reads files (which being prepared by `iprep_data_feeder.pl` script) in `$DATA_DIR` (recursively), fetches IP addresses and recalculates (in mysql) spam/ham score for fetched IP's.
+ Files must contain 'ham' or 'spam' words in names to be loaded and will be deleted after load.
+- `iprep_learn_from_imap.pl`: This script connects to Imap server, fetch IP addresses of incoming relays from all attachments founded in spam/ham accounts INBOX and recalculates spam/ham score for fetched IP's.
+ To use you must have `spam` and `ham` mailboxes on server, where users have to send complaints.
+
+Client side:
+- `iprep_learn_from_quarantine.pl`: This script read emails quarantined by spamassassin, fetch IP addresses of incoming relays, and recalculates spam/ham score for fetched IP's. Needs to be connected to mysql running on server side.
+- `iprep_data_feeder.pl`: Originally it is a `iprep.pl` written by chaosreigns. This script read emails quarantined by spamassassin, fetch IP addresses of incoming relays, create files with fetched IP's and push this data files to server by rsync.
+ On server side this files will be eaten by `iprep_load_data.pl`. Data files contains two fields `timestamp` and `IP` (devided by space) line by line for each processed email. This script is usable for clients which don't have access to mysql.
+
+Also on client side i use two helper scripts:
+
+- `iprep_sort_quarantined_mails_by_score.pl`: Must be run before `iprep_data_feeder.pl`. Script reads files quarantined by spamassassin and moves each file in spam/ham folder according spamassassin score.
+- `start_iprep.sh`: Main starter script on client side. 
+
+To use you should edit preferences section of each script and run it as cron job.
+
+So lets consider two cases of usage:
+
+## 1. Use `iprep_data_feeder.pl` on client side to provide data to server
+
+### To install server do the following:
+
+1) Download and unzip archive  
+2) Create bin directory and put `iprep_create_dns_zones.pl` and `iprep_load_data.pl` to it  
+3) Create data directory `/usr/local/iprep/data/`
+4) Configure rsyncd to put files in directory from 2)  
+Example `/etc/rsyncd.conf`:
+    
+    [mx]
+    path = /usr/local/iprep/data/mx
+    comment = IpRep
+    uid = nobody
+    gid = nogroup
+    read only = No
+    auth users = mx
+    secrets file = /etc/rsyncd.pass
+
+4) Add zone to bind (example in bind directory)  
+5) Edit "configuration" section  in `iprep_load_data.pl` and  `iprep_create_dns_zones.pl`  
+6) Create mysql database (use `create_tables.sql`)  
+7) Put `iprep-server.cron` to `/etc/cron.d/`  
+8) Put `iprep_status.cgi` to cgi-bin directory of the server  
+
+If you want to use zabbix:
+
+1) Put `zabbix-iprep` to `/etc/zabbix/scripts` and put zabbix.cron to `/etc/cron.d/`  
+2) Import `Template_App_Iprep.xml` into zabix
+
 
 ### To install client do the following:
 
@@ -62,38 +121,11 @@ I use the iprep.pl written by chaosreigns as a "Client".
     mkdir /opt/zimbra/data/amavisd/quarantine/clean/ham
     mkdir /opt/zimbra/data/amavisd/quarantine/clean/spam
 
-3) Put `start_iprep.sh`, `iprep.pl` and `prepare_quarantined_data.pl` to `/usr/local/bin/iprep/`  
+3) Put `start_iprep.sh`, `iprep_sort_quarantined_mails_by_score.pl` and `iprep_data_feeder.pl` to `/usr/local/bin/iprep/`  
 4) Edit `.ipreprc` and put to home directory of the spamassassin user  
 5) Put `iprep.cron` to `/etc/cron.d`  
 6) Put `iprep.cf` to spamassassin local-configs dir (in my case `/opt/zimbra/conf/sa`)  
 
 7) Restart spamassassin.  
 
-### To install server do the following:
-
-1) Put `iprep.pl` to `/usr/local/iprep/bin/` 
-2) Create `/usr/local/iprep/data/`  
-3) Configure rsyncd to put files in directory from 2)  
-Example `/etc/rsyncd.conf`:
-    
-    [mx]
-    path = /usr/local/iprep/data/mx
-    comment = IpRep
-    uid = nobody
-    gid = nogroup
-    #hosts allow = 192.168.1.0/24
-    #hosts deny = *
-    read only = No
-    auth users = mx
-    secrets file = /etc/rsyncd.pass
-
-4) Add zone to bind (example in bind directory)  
-5) Edit "configuration" section and subroutine "print_header" at bottom in  `/usr/local/iprep/bin/iprep.pl`  
-6) Create mysql database (use `create_tables.sql`)  
-7) Put `iprep.cron` to `/etc/cron.d/`  
-8) Put `iprep_status.cgi` to cgi-bin directory of the server  
-
-If you want to use zabbix:
-
-1) Put `zabbix-iprep` to `/etc/zabbix/scripts` and put zabbix.cron to `/etc/cron.d/`  
-2) Import `Template_App_Iprep.xml` into zabix
+## 1. Use `iprep_learn_from_quarantine.pl` on client side to provide data to server

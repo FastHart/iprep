@@ -1,4 +1,4 @@
-DROP DATABASE iprep;
+#DROP DATABASE iprep;
 CREATE DATABASE iprep character set utf8;
 use iprep;
 create table iprep
