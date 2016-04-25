@@ -24,7 +24,7 @@ For example IP 198.21.7.133 has reputation 100, and IP's 98.101.243.50 reputatio
     $ host 50.243.101.98.iprep.propertyminder.com
     50.243.101.98.iprep.propertyminder.colo has address 127.0.0.0
 
-In addition to the main iprep reputation zone (iprep) system provides other two dnsbl zones  (`iprep-black` and `iprep-white`), which contains IP adresses with very poor or very good reputation respectively.  
+In addition to the main iprep reputation zone (iprep) system provides other two dnsbl zones  (`iprep-black` and `iprep-white`), which contains IP addresses with very poor or very good reputation respectively.  
 This two zones can be used by `greylisting`, `postscreen` or by other anti-spam mechanisms.
 
 Now IpRep is running in production on my server.  
@@ -66,7 +66,7 @@ Client side:
 
 - `iprep_learn_from_quarantine.pl`: This script read emails quarantined by spamassassin, fetch IP addresses of incoming relays, and recalculates spam/ham score for fetched IP's. Needs connection to mysql on server side.
 - `iprep_data_feeder.pl`: Originally it is a `iprep.pl` written by chaosreigns. This script read emails quarantined by spamassassin, fetch IP addresses of incoming relays, create files with fetched IP's and push this data files to server by rsync.
- On server side this files will be eaten by `iprep_load_data.pl`. Data files contains two fields `timestamp` and `IP` (devided by space) line by line for each processed email. This script is usable for clients which don't have access to mysql running on server side.
+ On server side this files will be eaten by `iprep_load_data.pl`. Data files contains two fields `timestamp` and `IP` (divided by space) line by line for each processed email. This script is usable for clients which don't have access to mysql running on server side.
 
 Also on client side i use two helper scripts:
 
