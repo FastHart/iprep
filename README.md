@@ -63,9 +63,10 @@ Server side:
  To use you must have `spam` and `ham` mailboxes on server, where users have to send complaints.
 
 Client side:
-- `iprep_learn_from_quarantine.pl`: This script read emails quarantined by spamassassin, fetch IP addresses of incoming relays, and recalculates spam/ham score for fetched IP's. Needs to be connected to mysql running on server side.
+
+- `iprep_learn_from_quarantine.pl`: This script read emails quarantined by spamassassin, fetch IP addresses of incoming relays, and recalculates spam/ham score for fetched IP's. Needs connection to mysql on server side.
 - `iprep_data_feeder.pl`: Originally it is a `iprep.pl` written by chaosreigns. This script read emails quarantined by spamassassin, fetch IP addresses of incoming relays, create files with fetched IP's and push this data files to server by rsync.
- On server side this files will be eaten by `iprep_load_data.pl`. Data files contains two fields `timestamp` and `IP` (devided by space) line by line for each processed email. This script is usable for clients which don't have access to mysql.
+ On server side this files will be eaten by `iprep_load_data.pl`. Data files contains two fields `timestamp` and `IP` (devided by space) line by line for each processed email. This script is usable for clients which don't have access to mysql running on server side.
 
 Also on client side i use two helper scripts:
 
@@ -74,16 +75,16 @@ Also on client side i use two helper scripts:
 
 To use you should edit preferences section of each script and run it as cron job.
 
-So lets consider two cases of usage:
+So let's consider two cases of usage:
 
 ## 1. Use `iprep_data_feeder.pl` on client side to provide data to server
 
 ### To install server do the following:
 
 1) Download and unzip archive  
-2) Create bin directory and put `iprep_create_dns_zones.pl` and `iprep_load_data.pl` to it  
-3) Create data directory `/usr/local/iprep/data/`
-4) Configure rsyncd to put files in directory from 2)  
+2) Create `/usr/local/iprep/bin` directory and put `iprep_create_dns_zones.pl` and `iprep_load_data.pl` into it  
+3) Create data directory `/usr/local/iprep/data/`  
+4) Configure rsyncd to put files into directory from step 2  
 Example `/etc/rsyncd.conf`:
     
     [mx]
@@ -95,16 +96,16 @@ Example `/etc/rsyncd.conf`:
     auth users = mx
     secrets file = /etc/rsyncd.pass
 
-4) Add zone to bind (example in bind directory)  
-5) Edit "configuration" section  in `iprep_load_data.pl` and  `iprep_create_dns_zones.pl`  
-6) Create mysql database (use `create_tables.sql`)  
-7) Put `iprep-server.cron` to `/etc/cron.d/`  
-8) Put `iprep_status.cgi` to cgi-bin directory of the server  
+5) Add zone to bind (example in bind directory)  
+6) Edit "configuration" section  in `iprep_load_data.pl` and  `iprep_create_dns_zones.pl`  
+7) Create mysql database (use `create_tables.sql`)  
+8) Put `iprep-server.cron` into `/etc/cron.d/`  
+9) Put `iprep_status.cgi` into cgi-bin directory of the server  
 
 If you want to use zabbix:
 
-1) Put `zabbix-iprep` to `/etc/zabbix/scripts` and put zabbix.cron to `/etc/cron.d/`  
-2) Import `Template_App_Iprep.xml` into zabix
+10) Put `zabbix-iprep` into `/etc/zabbix/scripts` and put zabbix.cron into `/etc/cron.d/`  
+11) Import `Template_App_Iprep.xml` to zabix
 
 
 ### To install client do the following:
@@ -128,4 +129,39 @@ If you want to use zabbix:
 
 7) Restart spamassassin.  
 
-## 1. Use `iprep_learn_from_quarantine.pl` on client side to provide data to server
+## 2. Use `iprep_learn_from_files` on client side to provide data to server
+
+### To install server do the following:
+
+1) Download and unzip archive  
+2) Create `/usr/local/iprep/bin` directory and put `iprep_create_dns_zones.pl` into it  
+3) Add zone to bind (example in bind directory)  
+4) Edit "configuration" section  in `iprep_create_dns_zones.pl`  
+5) Create mysql database (use `create_tables.sql`), allow to connect to mysql from client    
+6) Edit `iprep-server.cron` and put it into `/etc/cron.d/`  
+7) Put `iprep_status.cgi` into cgi-bin directory of the server  
+
+If you want to use zabbix:
+
+8) Put `zabbix-iprep` to `/etc/zabbix/scripts` and put zabbix.cron to `/etc/cron.d/`  
+9) Import `Template_App_Iprep.xml` into zabix
+
+
+### To install client do the following:
+
+1) Edit spamassassin config, add following lines:  
+
+    $QUARANTINEDIR = "$MYHOME/quarantine";
+    $clean_quarantine_method = 'local:clean/%m';
+
+2) Create quarantine dirs (in my case):  
+
+    mkdir /var/lib/amavis/quarantine
+    mkdir /var/lib/amavis/quarantine/clean
+
+3) Put `start_iprep.sh` and `iprep_learn_from_files.pl` into `/usr/local/bin/iprep/`    
+4) Edit settings section of the `iprep_learn_from_files.pl` and `start_iprep.sh`  
+5) Put `iprep.cron` to `/etc/cron.d`  
+6) Put `iprep.cf` to spamassassin local-configs dir (in my case `/etc/spamassassin/`)  
+
+7) Restart spamassassin.  

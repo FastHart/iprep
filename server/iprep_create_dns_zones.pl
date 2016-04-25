@@ -21,7 +21,7 @@ my $DOMAIN = 'example.com';
 my $ZONE_REPUTATION_NAME = 'iprep';
 my $ZONE_BLACKLIST_NAME = 'iprep-black';
 my $ZONE_WHITELIST_NAME = 'iprep-white';
-my $ZONES_DIRECTORY = './';
+my $ZONES_DIRECTORY = '/etc/bind/iprep';
 my $ZONE_SOA_EMAIL = 'admins.example.com'; # this e-mail will be added to SOA rocord (so use SOA syntax only)
 
 my $DB_NAME = 'iprep';

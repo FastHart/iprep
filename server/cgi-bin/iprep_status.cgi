@@ -3,7 +3,7 @@ echo "Content-Type: text/plain"
 echo ""
 
 
-MYSQL='/usr/bin/mysql -N -u root iprep'
+MYSQL='/usr/bin/mysql -N -u iprep --password="" iprep'
 
 printf "Database last updated (`/bin/date +"%Z %:::z"`): "
 echo "select max(timestamp) from iprep;" | $MYSQL
