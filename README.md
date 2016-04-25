@@ -165,3 +165,7 @@ If you want to use zabbix:
 6) Put `iprep.cf` to spamassassin local-configs dir (in my case `/etc/spamassassin/`)  
 
 7) Restart spamassassin.  
+
+============  
+Enjoy! And feel free to contact me by email `<this project name>`@valynkin.ru
+
