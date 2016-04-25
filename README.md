@@ -77,9 +77,9 @@ To use you should edit preferences section of each script and run it as cron job
 
 So let's consider two cases of usage:
 
-## 1. Use `iprep_data_feeder.pl` on client side to provide data to server
+### 1. Use `iprep_data_feeder.pl` on client side to provide data to server
 
-### To install server do the following:
+#### To install server do the following:
 
 1) Download and unzip archive  
 2) Create `/usr/local/iprep/bin` directory and put `iprep_create_dns_zones.pl` and `iprep_load_data.pl` into it  
@@ -108,7 +108,7 @@ If you want to use zabbix:
 11) Import `Template_App_Iprep.xml` to zabix
 
 
-### To install client do the following:
+#### To install client do the following:
 
 1) Edit spamassassin config, add following lines:  
 
@@ -129,9 +129,9 @@ If you want to use zabbix:
 
 7) Restart spamassassin.  
 
-## 2. Use `iprep_learn_from_files` on client side to provide data to server
+### 2. Use `iprep_learn_from_files` on client side to provide data to server
 
-### To install server do the following:
+#### To install server do the following:
 
 1) Download and unzip archive  
 2) Create `/usr/local/iprep/bin` directory and put `iprep_create_dns_zones.pl` into it  
@@ -147,7 +147,7 @@ If you want to use zabbix:
 9) Import `Template_App_Iprep.xml` into zabix
 
 
-### To install client do the following:
+#### To install client do the following:
 
 1) Edit spamassassin config, add following lines:  
 
